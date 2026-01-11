@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>XPgram</title>
+  <link rel="stylesheet" href="style.css" />
+    <script type="module"
+    src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
+  </script>
+</head>
+<body>
+
+
+
+<audio id="clickSound" src="sounds/click.ogg"></audio>
+<audio id="openSound" src="sounds/open.ogg"></audio>
+
+<div id="desktop">
+
+  <div class="desktop-icon" id="xpgramIcon" title="Double-click to open XPgram">
+    <div class="icon-img">📸</div>
+    <div class="icon-label">XPgram</div>
+  </div>
+
+  <div class="window draggable hidden" id="feedWindow">
+    <div class="title-bar">
+      <div class="title-left"><span class="icon">📸</span><span>XPgram – Feed</span></div>
+      <div class="window-controls">
+        <button class="min-btn" title="Minimize">_</button>
+        <button class="max-btn" title="Maximize">▢</button>
+        <button class="close-btn" title="Close">X</button>
+      </div>
+    </div>
+
+    <div class="window-content feed" id="feed"></div>
+  </div>
+
+</div>
+
+<div id="modal" class="modal hidden">
+  <div class="window draggable" id="modalWindow" style="left: calc(50% - 260px); top: 80px;">
+    <div class="title-bar">
+      <div class="title-left"><span class="icon">📄</span><span>Post</span></div>
+      <div class="window-controls">
+        <button id="closeModal">X</button>
+      </div>
+    </div>
+    <div class="window-content" id="modalContent"></div>
+  </div>
+</div>
+
+<div id="taskbar">
+  <button id="startBtn" class="start-btn" aria-haspopup="true" aria-expanded="false">Start ▾</button>
+  <div id="startMenu" class="start-menu hidden" aria-hidden="true" role="menu">
+    <ul>
+      <li><label class="menu-item"><input type="checkbox" id="startThemeToggle"> Dark Mode</label></li>
+    </ul>
+  </div>
+
+  <div class="taskbar-spacer"></div>
+  <div class="tray">12:00</div>
+</div>
+
+<script src="posts.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
