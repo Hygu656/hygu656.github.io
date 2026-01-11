@@ -54,7 +54,7 @@ const POSTS = [
     media: [
       {
       type: "model",
-      src: "models/osiedletopografia.glb",
+      src: "models/osiedletopografia2.glb",
       poster: "models/boomboxposter.png"
     },
     ]
@@ -94,4 +94,5 @@ const POSTS = [
   ]
 }
 ];
+
 
