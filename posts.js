@@ -45,6 +45,22 @@ const POSTS = [
     ]
   },
   {
+    id: 4,
+    user: "Porstek",
+    avatar: "media/avatars/retro_dev.jpg",
+    userLink: "https://www.instagram.com/porstek3d/",
+    likes: 28,
+    caption: "Oldschool video 🎥",
+    media: [
+      {
+      type: "model",
+      src: "models/osiedletopografia.glb",
+      poster: "models/boomboxposter.png"
+    },
+    ]
+  },
+  {
+  id: 5,
   user: "xp_user",
   avatar: "avatars/user1.png",
   caption: "XP 3D object",
@@ -78,3 +94,4 @@ const POSTS = [
   ]
 }
 ];
+
