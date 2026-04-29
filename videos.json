@@ -1,0 +1,36 @@
+{
+  "site": {
+    "name": "KLIPEX",
+    "description": "Klipy ekipy",
+    "accent_color": "#ff2d2d"
+  },
+  "videos": [
+    {
+      "id": "4-ZialDvqkE",
+      "title": "Klip Dnia",
+      "author": "Wojtek",
+      "date": "2025-04-20 (3dni temu)",
+      "category": "top",
+      "featured": true,
+      "description": "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    },
+    {
+      "id": "KSPxHniCtmw",
+      "title": "Aente daily vlog",
+      "author": "Ziomek",
+      "date": "2025-04-15 (8dni temu)",
+      "category": "sex",
+      "featured": false,
+      "description": "Tu też możesz dodać opis"
+    },
+    {
+      "id": "9bZkp7q19f0",
+      "title": "Przykładowy klip 3",
+      "author": "Ekipa",
+      "date": "2025-03-30 (35dni temu)",
+      "category": "zjeby",
+      "featured": false,
+      "description": ""
+    }
+  ]
+}

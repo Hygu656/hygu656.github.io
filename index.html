@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KLIPEX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --accent: #ff2d2d;
+      --accent-dark: #c91f1f;
+      --bg: #080808;
+      --surface: #111111;
+      --surface2: #1a1a1a;
+      --border: rgba(255,255,255,0.07);
+      --text: #e8e8e8;
+      --muted: #888;
+      --font-display: 'Bebas Neue', cursive;
+      --font-body: 'Barlow', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 64px;
+      background: linear-gradient(to bottom, rgba(8,8,8,0.98) 0%, transparent 100%);
+      backdrop-filter: blur(6px);
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 30px;
+      letter-spacing: 5px;
+      color: var(--accent);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      color: #fff;
+      background: rgba(255,255,255,0.07);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      max-height: 700px;
+      min-height: 480px;
+      display: flex;
+      align-items: flex-end;
+      padding: 0 48px 64px;
+      overflow: hidden;
+    }
+
+    .hero-backdrop {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: background-image 0.6s;
+    }
+
+    .hero-backdrop::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top, var(--bg) 0%, rgba(8,8,8,0.6) 40%, rgba(8,8,8,0.2) 100%),
+        linear-gradient(to right, var(--bg) 0%, transparent 55%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 560px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .hero-tag::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 72px;
+      letter-spacing: 2px;
+      line-height: 0.95;
+      margin-bottom: 16px;
+      color: #fff;
+      text-shadow: 0 4px 24px rgba(0,0,0,0.6);
+    }
+
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .hero-desc {
+      font-size: 15px;
+      color: #bbb;
+      line-height: 1.65;
+      margin-bottom: 28px;
+      max-width: 400px;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 13px 32px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
+    .btn-primary:active { transform: scale(0.98); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 4px;
+      padding: 13px 28px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-secondary:hover { background: rgba(255,255,255,0.18); }
+
+    /* ── SECTIONS ── */
+    .sections-wrapper {
+      padding: 0 48px 80px;
+    }
+
+    .section { margin-bottom: 48px; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      letter-spacing: 2.5px;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .section-count {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* ── CARDS ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      background: var(--surface2);
+      aspect-ratio: 16/9;
+      transition: transform 0.25s cubic-bezier(.25,.8,.25,1), box-shadow 0.25s;
+    }
+
+    .card:hover {
+      transform: scale(1.05) translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,45,45,0.2);
+      z-index: 5;
+    }
+
+    .card-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.3s;
+    }
+
+    .card-no-thumb {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: var(--surface2);
+    }
+
+    .card-no-thumb .play-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(255,45,45,0.12);
+      border: 1.5px solid rgba(255,45,45,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-no-thumb span {
+      font-size: 12px;
+      color: #444;
+    }
+
+    .card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.25s;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 16px;
+    }
+
+    .card:hover .card-overlay { opacity: 1; }
+
+    .card-play-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .card:hover .card-play-btn {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .card-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: #fff;
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .card-meta {
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 3px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+    }
+
+    .empty-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      letter-spacing: 2px;
+      color: #333;
+      margin-bottom: 12px;
+    }
+
+    /* ── MODAL ── */
+    .modal-bg {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+      padding: 24px;
+    }
+
+    .modal-bg.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 900px;
+      background: #181818;
+      border-radius: 12px;
+      overflow: hidden;
+      transform: scale(0.95);
+      transition: transform 0.25s;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .modal-bg.open .modal { transform: scale(1); }
+
+    .modal-video-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #000;
+    }
+
+    .modal-video-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 10;
+      background: rgba(0,0,0,0.7);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 20px;
+      line-height: 1;
+      transition: background 0.15s;
+    }
+
+    .modal-close:hover { background: rgba(255,45,45,0.5); }
+
+    .modal-info {
+      padding: 24px 28px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 30px;
+      letter-spacing: 1.5px;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .modal-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 12px;
+    }
+
+    .modal-author {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .author-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .modal-date { font-size: 13px; color: #555; }
+
+    .modal-desc {
+      font-size: 14px;
+      color: #999;
+      line-height: 1.65;
+      font-style: italic;
+    }
+
+    /* ── LOADER ── */
+    .loader {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+      color: var(--muted);
+      font-size: 14px;
+      letter-spacing: 2px;
+    }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      padding: 20px 48px 0;
+    }
+
+    .filter-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 7px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-btn:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+    .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .hero { padding: 0 20px 48px; }
+      .hero-title { font-size: 48px; }
+      .sections-wrapper { padding: 0 20px 60px; }
+      .filter-bar { padding: 20px 20px 0; }
+      .cards-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo" onclick="location.reload()">KLIPEX</div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="setFilter('all', this)">Wszystkie</button>
+    <button class="nav-btn" onclick="setFilter('top', this)">Top Klipy</button>
+    <button class="nav-btn" onclick="setFilter('nowe', this)">Nowe</button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero" id="hero">
+  <div class="hero-backdrop" id="hero-backdrop"></div>
+  <div class="hero-content" id="hero-content">
+    <div class="loader">Ładowanie...</div>
+  </div>
+</div>
+
+<!-- Filters -->
+<div class="filter-bar" id="filter-bar" style="display:none">
+  <button class="filter-btn active" onclick="setFilter('all', this)">Wszystkie</button>
+  <button class="filter-btn" onclick="setFilter('top', this)">Top</button>
+  <button class="filter-btn" onclick="setFilter('nowe', this)">Nowe</button>
+</div>
+
+<!-- Main content -->
+<div class="sections-wrapper" id="sections-wrapper">
+  <div class="loader">Ładowanie klipów...</div>
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="modal-bg" onclick="handleModalBgClick(event)">
+  <div class="modal" id="modal">
+    <div class="modal-video-wrap">
+      <button class="modal-close" onclick="closeModal()">&#x2715;</button>
+      <iframe id="modal-iframe" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+    </div>
+    <div class="modal-info">
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-meta-row">
+        <div class="modal-author">
+          <div class="author-dot" id="modal-author-dot"></div>
+          <span id="modal-author"></span>
+        </div>
+        <div class="modal-date" id="modal-date"></div>
+      </div>
+      <div class="modal-desc" id="modal-desc"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let allVideos = [];
+  let siteConfig = {};
+  let currentFilter = 'all';
+  let heroVideo = null;
+
+  // ── Load videos.json ──
+  async function init() {
+    try {
+      const res = await fetch('./videos.json');
+      if (!res.ok) throw new Error('Nie można załadować videos.json');
+      const data = await res.json();
+      siteConfig = data.site || {};
+      allVideos = data.videos || [];
+
+      // Apply site name
+      if (siteConfig.name) {
+        document.title = siteConfig.name;
+        document.querySelector('.logo').textContent = siteConfig.name;
+      }
+      if (siteConfig.accent_color) {
+        document.documentElement.style.setProperty('--accent', siteConfig.accent_color);
+      }
+
+      heroVideo = allVideos.find(v => v.featured) || allVideos[0] || null;
+
+      renderHero();
+      renderSections();
+      document.getElementById('filter-bar').style.display = 'flex';
+    } catch (e) {
+      document.getElementById('hero-content').innerHTML = `
+        <div style="color:#c00;font-size:14px;line-height:1.7">
+          Błąd: ${e.message}<br>
+          <span style="color:#555;font-size:13px">Upewnij się, że plik videos.json jest w tym samym folderze co index.html</span>
+        </div>`;
+      document.getElementById('sections-wrapper').innerHTML = '';
+    }
+  }
+
+  // ── Hero ──
+  function renderHero() {
+    if (!heroVideo) {
+      document.getElementById('hero-content').innerHTML = `
+        <div class="empty-title">BRAK KLIPÓW</div>
+        <p style="color:#555;font-size:14px">Dodaj filmy do videos.json</p>`;
+      return;
+    }
+
+    const v = heroVideo;
+    const backdrop = document.getElementById('hero-backdrop');
+    const setThumb = (url) => {
+      backdrop.style.backgroundImage = `url('${url}')`;
+      backdrop.style.backgroundSize = 'cover';
+      backdrop.style.backgroundPosition = 'center';
+    };
+    const img = new Image();
+    img.onload = () => {
+      // maxresdefault returns a 120x90 placeholder when unavailable
+      if (img.naturalWidth <= 120) {
+        setThumb(`https://img.youtube.com/vi/${v.id}/hqdefault.jpg`);
+      } else {
+        setThumb(img.src);
+      }
+    };
+    img.onerror = () => setThumb(`https://img.youtube.com/vi/${v.id}/hqdefault.jpg`);
+    img.src = `https://img.youtube.com/vi/${v.id}/maxresdefault.jpg`;
+
+    document.getElementById('hero-content').innerHTML = `
+      <div class="hero-tag">Featured</div>
+      <div class="hero-title">${v.title}</div>
+      <div class="hero-meta">
+        <span>${v.author}</span>
+        <span style="color:#333">&bull;</span>
+        <span>${formatDate(v.date)}</span>
+        ${v.category ? `<span style="color:#333">&bull;</span><span style="color:var(--accent);text-transform:uppercase;font-size:11px;letter-spacing:1px">${v.category}</span>` : ''}
+      </div>
+      ${v.description ? `<div class="hero-desc">${v.description}</div>` : ''}
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="openModal('${v.id}','${esc(v.title)}','${esc(v.author)}','${v.date}','${esc(v.description||'')}')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          Odtwórz
+        </button>
+        <button class="btn-secondary" onclick="openModal('${v.id}','${esc(v.title)}','${esc(v.author)}','${v.date}','${esc(v.description||'')}')">
+          Więcej info
+        </button>
+      </div>
+    `;
+  }
+
+  // ── Sections ──
+  function renderSections() {
+    const wrapper = document.getElementById('sections-wrapper');
+
+    const filtered = currentFilter === 'all'
+      ? allVideos
+      : allVideos.filter(v => v.category === currentFilter);
+
+    if (!filtered.length) {
+      wrapper.innerHTML = `<div class="empty"><div class="empty-title">BRAK KLIPÓW</div><p>Brak klipów w tej kategorii.</p></div>`;
+      return;
+    }
+
+    const categories = currentFilter === 'all'
+      ? [...new Set(allVideos.map(v => v.category || 'inne'))]
+      : [currentFilter];
+
+    let html = '';
+    categories.forEach(cat => {
+      const vids = allVideos.filter(v => (v.category || 'inne') === cat);
+      if (!vids.length) return;
+      const label = cat === 'top' ? 'Top Klipy' : cat === 'nowe' ? 'Nowe Klipy' : cat.charAt(0).toUpperCase() + cat.slice(1);
+      html += `
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">${label}</div>
+            <div class="section-line"></div>
+            <div class="section-count">${vids.length} klip${vids.length === 1 ? '' : 'ów'}</div>
+          </div>
+          <div class="cards-grid">
+            ${vids.map((v, i) => cardHTML(v, i)).join('')}
+          </div>
+        </div>
+      `;
+    });
+
+    wrapper.innerHTML = html;
+  }
+
+  function cardHTML(v, i) {
+    const thumb = `https://img.youtube.com/vi/${v.id}/hqdefault.jpg`;
+    const isNew = isNewVideo(v.date);
+    return `
+      <div class="card" onclick="openModal('${v.id}','${esc(v.title)}','${esc(v.author)}','${v.date}','${esc(v.description||'')}')">
+        <img class="card-thumb" src="${thumb}" alt="${esc(v.title)}"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="card-no-thumb" style="display:none">
+          <div class="play-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#ff2d2d"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <span>${esc(v.title)}</span>
+        </div>
+        ${isNew ? '<div class="card-badge">Nowy</div>' : ''}
+        <div class="card-play-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <div class="card-overlay">
+          <div class="card-title">${esc(v.title)}</div>
+          <div class="card-meta">${esc(v.author)} &bull; ${formatDate(v.date)}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ── Filter ──
+  function setFilter(f, btn) {
+    currentFilter = f;
+    document.querySelectorAll('.nav-btn, .filter-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderSections();
+  }
+
+  // ── Modal ──
+  function openModal(id, title, author, date, desc) {
+    document.getElementById('modal-iframe').src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-author').textContent = author;
+    document.getElementById('modal-author-dot').textContent = author.charAt(0).toUpperCase();
+    document.getElementById('modal-date').textContent = formatDate(date);
+    document.getElementById('modal-desc').textContent = desc || '';
+    document.getElementById('modal-bg').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('modal-bg').classList.remove('open');
+    document.getElementById('modal-iframe').src = '';
+    document.body.style.overflow = '';
+  }
+
+  function handleModalBgClick(e) {
+    if (e.target === document.getElementById('modal-bg')) closeModal();
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  // ── Helpers ──
+  function formatDate(d) {
+    if (!d) return '';
+    try {
+      return new Date(d).toLocaleDateString('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' });
+    } catch { return d; }
+  }
+
+  function isNewVideo(d) {
+    if (!d) return false;
+    const diff = (Date.now() - new Date(d).getTime()) / (1000 * 60 * 60 * 24);
+    return diff <= 14;
+  }
+
+  function esc(s) {
+    return String(s).replace(/'/g, '&#39;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  init();
+</script>
+</body>
+</html>
