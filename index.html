@@ -597,8 +597,28 @@
 <script>
   let allVideos = [];
   let siteConfig = {};
+  let authorsMap = {};
   let currentFilter = 'all';
   let heroVideo = null;
+
+  // ── Tooltip ──
+  const tooltip = document.createElement('div');
+  tooltip.style.cssText = `
+    position:fixed;z-index:9999;background:#1e1e1e;border:1px solid rgba(255,255,255,0.12);
+    color:#e8e8e8;font-family:var(--font-body);font-size:12px;padding:6px 12px;
+    border-radius:6px;pointer-events:none;opacity:0;transition:opacity 0.15s;
+    white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.6);
+  `;
+  document.body.appendChild(tooltip);
+
+  function showTooltip(el, text) {
+    tooltip.textContent = text;
+    tooltip.style.opacity = '1';
+    const rect = el.getBoundingClientRect();
+    tooltip.style.left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2 + 'px';
+    tooltip.style.top  = rect.top - tooltip.offsetHeight - 8 + 'px';
+  }
+  function hideTooltip() { tooltip.style.opacity = '0'; }
 
   // ── Load videos.json ──
   async function init() {
@@ -606,10 +626,10 @@
       const res = await fetch('./videos.json');
       if (!res.ok) throw new Error('Nie można załadować videos.json');
       const data = await res.json();
-      siteConfig = data.site || {};
-      allVideos = data.videos || [];
+      siteConfig  = data.site    || {};
+      authorsMap  = data.authors || {};
+      allVideos   = data.videos  || [];
 
-      // Apply site name
       if (siteConfig.name) {
         document.title = siteConfig.name;
         document.querySelector('.logo').textContent = siteConfig.name;
@@ -627,10 +647,44 @@
       document.getElementById('hero-content').innerHTML = `
         <div style="color:#c00;font-size:14px;line-height:1.7">
           Błąd: ${e.message}<br>
-          <span style="color:#555;font-size:13px">Upewnij się, że plik videos.json jest w tym samym folderze co index.html</span>
+          <span style="color:#555;font-size:13px">Upewnij się że plik videos.json jest w tym samym folderze co index.html</span>
         </div>`;
       document.getElementById('sections-wrapper').innerHTML = '';
     }
+  }
+
+  // ── Days ago + tooltip HTML ──
+  function daysAgoHTML(isoDate) {
+    if (!isoDate) return '<span style="color:#555">brak daty</span>';
+    const date  = new Date(isoDate);
+    const diff  = Math.floor((Date.now() - date.getTime()) / (1000 * 60 * 60 * 24));
+    const exact = date.toLocaleDateString('pl-PL', { day:'numeric', month:'long', year:'numeric' });
+    let label;
+    if (diff === 0)      label = 'dzisiaj';
+    else if (diff === 1) label = 'wczoraj';
+    else if (diff < 7)  label = `${diff} dni temu`;
+    else if (diff < 30) label = `${Math.floor(diff/7)} tyg. temu`;
+    else if (diff < 365)label = `${Math.floor(diff/30)} mies. temu`;
+    else                label = `${Math.floor(diff/365)} lat temu`;
+
+    return `<span
+      style="cursor:default;border-bottom:1px dashed rgba(255,255,255,0.2);padding-bottom:1px;"
+      onmouseenter="showTooltip(this,'${exact}')"
+      onmouseleave="hideTooltip()"
+    >${label}</span>`;
+  }
+
+  // ── Author link HTML ──
+  function authorHTML(author) {
+    const url = authorsMap[author] || '';
+    if (url) {
+      return `<a href="${url}" target="_blank" rel="noopener"
+        style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.25);padding-bottom:1px;transition:color 0.15s,border-color 0.15s"
+        onmouseover="this.style.color='#fff';this.style.borderBottomColor='var(--accent)'"
+        onmouseout="this.style.color='';this.style.borderBottomColor='rgba(255,255,255,0.25)'"
+      >${esc(author)}</a>`;
+    }
+    return esc(author);
   }
 
   // ── Hero ──
@@ -651,12 +705,8 @@
     };
     const img = new Image();
     img.onload = () => {
-      // maxresdefault returns a 120x90 placeholder when unavailable
-      if (img.naturalWidth <= 120) {
-        setThumb(`https://img.youtube.com/vi/${v.id}/hqdefault.jpg`);
-      } else {
-        setThumb(img.src);
-      }
+      if (img.naturalWidth <= 120) setThumb(`https://img.youtube.com/vi/${v.id}/hqdefault.jpg`);
+      else setThumb(img.src);
     };
     img.onerror = () => setThumb(`https://img.youtube.com/vi/${v.id}/hqdefault.jpg`);
     img.src = `https://img.youtube.com/vi/${v.id}/maxresdefault.jpg`;
@@ -665,18 +715,18 @@
       <div class="hero-tag">Featured</div>
       <div class="hero-title">${v.title}</div>
       <div class="hero-meta">
-        <span>${v.author}</span>
+        <span>${authorHTML(v.author)}</span>
         <span style="color:#333">&bull;</span>
-        <span>${formatDate(v.date)}</span>
+        <span>${daysAgoHTML(v.date)}</span>
         ${v.category ? `<span style="color:#333">&bull;</span><span style="color:var(--accent);text-transform:uppercase;font-size:11px;letter-spacing:1px">${v.category}</span>` : ''}
       </div>
       ${v.description ? `<div class="hero-desc">${v.description}</div>` : ''}
       <div class="hero-btns">
-        <button class="btn-primary" onclick="openModal('${v.id}','${esc(v.title)}','${esc(v.author)}','${v.date}','${esc(v.description||'')}')">
+        <button class="btn-primary" onclick="openModal('${v.id}')">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
           Odtwórz
         </button>
-        <button class="btn-secondary" onclick="openModal('${v.id}','${esc(v.title)}','${esc(v.author)}','${v.date}','${esc(v.description||'')}')">
+        <button class="btn-secondary" onclick="openModal('${v.id}')">
           Więcej info
         </button>
       </div>
@@ -687,12 +737,8 @@
   function renderSections() {
     const wrapper = document.getElementById('sections-wrapper');
 
-    const filtered = currentFilter === 'all'
-      ? allVideos
-      : allVideos.filter(v => v.category === currentFilter);
-
-    if (!filtered.length) {
-      wrapper.innerHTML = `<div class="empty"><div class="empty-title">BRAK KLIPÓW</div><p>Brak klipów w tej kategorii.</p></div>`;
+    if (!allVideos.length) {
+      wrapper.innerHTML = `<div class="empty"><div class="empty-title">BRAK KLIPÓW</div><p>Dodaj filmy do videos.json</p></div>`;
       return;
     }
 
@@ -713,20 +759,20 @@
             <div class="section-count">${vids.length} klip${vids.length === 1 ? '' : 'ów'}</div>
           </div>
           <div class="cards-grid">
-            ${vids.map((v, i) => cardHTML(v, i)).join('')}
+            ${vids.map(v => cardHTML(v)).join('')}
           </div>
         </div>
       `;
     });
 
-    wrapper.innerHTML = html;
+    wrapper.innerHTML = html || `<div class="empty"><div class="empty-title">BRAK KLIPÓW</div><p>Brak klipów w tej kategorii.</p></div>`;
   }
 
-  function cardHTML(v, i) {
-    const thumb = `https://img.youtube.com/vi/${v.id}/hqdefault.jpg`;
-    const isNew = isNewVideo(v.date);
+  function cardHTML(v) {
+    const thumb  = `https://img.youtube.com/vi/${v.id}/hqdefault.jpg`;
+    const isNew  = v.date && ((Date.now() - new Date(v.date).getTime()) / 86400000) <= 14;
     return `
-      <div class="card" onclick="openModal('${v.id}','${esc(v.title)}','${esc(v.author)}','${v.date}','${esc(v.description||'')}')">
+      <div class="card" onclick="openModal('${v.id}')">
         <img class="card-thumb" src="${thumb}" alt="${esc(v.title)}"
           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <div class="card-no-thumb" style="display:none">
@@ -741,7 +787,7 @@
         </div>
         <div class="card-overlay">
           <div class="card-title">${esc(v.title)}</div>
-          <div class="card-meta">${esc(v.author)} &bull; ${formatDate(v.date)}</div>
+          <div class="card-meta">${esc(v.author)} &bull; ${daysAgoHTML(v.date)}</div>
         </div>
       </div>
     `;
@@ -756,13 +802,15 @@
   }
 
   // ── Modal ──
-  function openModal(id, title, author, date, desc) {
+  function openModal(id) {
+    const v = allVideos.find(x => x.id === id);
+    if (!v) return;
     document.getElementById('modal-iframe').src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
-    document.getElementById('modal-title').textContent = title;
-    document.getElementById('modal-author').textContent = author;
-    document.getElementById('modal-author-dot').textContent = author.charAt(0).toUpperCase();
-    document.getElementById('modal-date').textContent = formatDate(date);
-    document.getElementById('modal-desc').textContent = desc || '';
+    document.getElementById('modal-title').textContent = v.title;
+    document.getElementById('modal-author').innerHTML = authorHTML(v.author);
+    document.getElementById('modal-author-dot').textContent = v.author.charAt(0).toUpperCase();
+    document.getElementById('modal-date').innerHTML = daysAgoHTML(v.date);
+    document.getElementById('modal-desc').textContent = v.description || '';
     document.getElementById('modal-bg').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
@@ -771,6 +819,7 @@
     document.getElementById('modal-bg').classList.remove('open');
     document.getElementById('modal-iframe').src = '';
     document.body.style.overflow = '';
+    hideTooltip();
   }
 
   function handleModalBgClick(e) {
@@ -779,25 +828,46 @@
 
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-  // ── Helpers ──
-  function formatDate(d) {
-    if (!d) return '';
-    try {
-      return new Date(d).toLocaleDateString('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' });
-    } catch { return d; }
-  }
-
-  function isNewVideo(d) {
-    if (!d) return false;
-    const diff = (Date.now() - new Date(d).getTime()) / (1000 * 60 * 60 * 24);
-    return diff <= 14;
-  }
-
   function esc(s) {
-    return String(s).replace(/'/g, '&#39;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return String(s).replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
   init();
+
+  const secretCode = "AENTE"; 
+
+  let secretActive = false; 
+  let typed = "";
+
+  document.addEventListener("keydown", (e) => {
+      if (secretActive) return;
+    typed += e.key.toUpperCase();
+    if (!secretCode.startsWith(typed)) typed = "";
+    if (typed === secretCode) {
+      typed = "";
+      secretActive = true;
+      console.log("Secret code activated!");
+      const v = {
+        id: "KSPxHniCtmw",
+        title: "Tajemniczy Klip",
+        author: "Admin",
+        date: new Date().toISOString(),
+        description: "Gratulacje! Odkryłeś tajemniczy klip. To easter egg ukryty w kodzie strony."
+      };
+
+          document.getElementById('modal-iframe').src = `https://www.youtube.com/embed/${v.id}?autoplay=1&rel=0`;
+          document.getElementById('modal-title').textContent = v.title;
+          document.getElementById('modal-author').innerHTML = authorHTML(v.author);
+          document.getElementById('modal-author-dot').textContent = v.author.charAt(0).toUpperCase();
+          document.getElementById('modal-date').innerHTML = daysAgoHTML(v.date);
+          document.getElementById('modal-desc').textContent = v.description || '';
+          document.getElementById('modal-bg').classList.add('open');
+          document.body.style.overflow = 'hidden';
+    }
+  });
+
+
+
 </script>
 </body>
 </html>
