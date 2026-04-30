@@ -4,22 +4,29 @@
     "description": "Klipy ekipy",
     "accent_color": "#ff2d2d"
   },
+  "authors": {
+    "Hygu": "https://www.instagram.com/hyngu656/",
+    "Porstek":     "https://www.instagram.com/kporstek/",
+    "Kucek":      "",
+    "Bartek":      "",
+    "Admin":        "https://www.youtube.com/watch?v=esUkkWZolmY"
+  },
   "videos": [
     {
       "id": "4-ZialDvqkE",
-      "title": "Klip Dnia",
-      "author": "Wojtek",
-      "date": "2025-04-20 (3dni temu)",
+      "title": "Aetne Slander",
+      "author": "Hygu",
+      "date": "2023-10-26", 
       "category": "top",
       "featured": true,
-      "description": "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+      "description": "Slander najelowentniejszej grupy koxów ever, Aetne, w akcji. Ten klip jest naprawdę epicki i pokazuje, jak Aetne demoluje przeciwników swoimi niesamowitymi umiejętnościami. Nie przegap tego!"
     },
     {
-      "id": "KSPxHniCtmw",
-      "title": "Aente daily vlog",
+      "id": "jNQXAC9IVRw",
+      "title": "Przykładowy klip 2",
       "author": "Ziomek",
-      "date": "2025-04-15 (8dni temu)",
-      "category": "sex",
+      "date": "2025-04-10",
+      "category": "nowe",
       "featured": false,
       "description": "Tu też możesz dodać opis"
     },
@@ -27,8 +34,8 @@
       "id": "9bZkp7q19f0",
       "title": "Przykładowy klip 3",
       "author": "Ekipa",
-      "date": "2025-03-30 (35dni temu)",
-      "category": "zjeby",
+      "date": "2025-03-01",
+      "category": "top",
       "featured": false,
       "description": ""
     }
